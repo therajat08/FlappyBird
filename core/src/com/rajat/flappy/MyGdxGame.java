@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import java.util.Random;
+
 import javax.xml.soap.Text;
 
 public class MyGdxGame extends ApplicationAdapter {
@@ -25,6 +27,11 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	float gap = 400; //with this game hardness is determined
 
+    float maxTubeOffset;
+    float tubeOffset;
+
+    Random randomGenerator; //for random gap
+
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
@@ -37,6 +44,10 @@ public class MyGdxGame extends ApplicationAdapter {
 
         topTube = new Texture("toptube.png");
         bottomTube = new Texture("bottomtube.png");
+
+        maxTubeOffset = Gdx.graphics.getHeight()/2 - gap/2 - 100;
+        randomGenerator = new Random();
+
 
 	}
 
@@ -56,24 +67,31 @@ public class MyGdxGame extends ApplicationAdapter {
 
         if(gameState != 0) {
 
-
-
-            batch.draw(topTube,
-                    Gdx.graphics.getWidth()/2 - topTube.getWidth()/2,
-                    Gdx.graphics.getHeight()/2 + gap/2);
-            batch.draw(bottomTube,
-                    Gdx.graphics.getWidth()/2 - bottomTube.getWidth()/2,
-                    Gdx.graphics.getHeight()/2 - gap/2 - bottomTube.getHeight());
-
-
-
-
             if(Gdx.input.justTouched()){
 
-                birdVelocity = +20;
+                birdVelocity = +30;
+                tubeOffset = (randomGenerator.nextFloat() - 0.5f) * (Gdx.graphics.getHeight() - gap - 200);
+                //this method creates random num b/w 0 & 1
+                //with 0.5 rand num is b/w 0.5 & -0.5
             }
-            birdVelocity -= gravity;
-            birdY += birdVelocity;
+
+
+            //drawing tubes
+            batch.draw(topTube,
+                    Gdx.graphics.getWidth()/2 - topTube.getWidth()/2,
+                    Gdx.graphics.getHeight()/2 + gap/2 + tubeOffset);
+            batch.draw(bottomTube,
+                    Gdx.graphics.getWidth()/2 - bottomTube.getWidth()/2,
+                    Gdx.graphics.getHeight()/2 - gap/2 - bottomTube.getHeight() + tubeOffset);
+
+            if(birdY>0 || birdVelocity <0){
+
+                birdVelocity -= gravity;
+                birdY += birdVelocity;
+
+            }
+
+
 
 
         }else
@@ -85,12 +103,18 @@ public class MyGdxGame extends ApplicationAdapter {
             }
         }
 
-        if (flapState == 0) {
+        if (flapState == 0)
+            {
 
-            flapState = 1;
-        } else {
-            flapState = 0;
-        }
+                flapState = 1;
+
+            }
+        else
+            {
+
+                flapState = 0;
+
+            }
 
         batch.draw
                 (birds[flapState],
