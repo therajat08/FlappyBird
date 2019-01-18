@@ -25,7 +25,7 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	int gameState = 0;
 
-	float gap = 400; //with this game hardness is determined
+	float gap = 350; //with this game hardness is determined
 
     float maxTubeOffset;
 
@@ -103,10 +103,14 @@ public class MyGdxGame extends ApplicationAdapter {
                 //drawing tubes
                 batch.draw(topTube,
                         tubeX[i],
-                        Gdx.graphics.getHeight() / 2 + gap / 2 + tubeOffset[i]);
+                        Gdx.graphics.getHeight() / 2 + gap / 2 + tubeOffset[i],
+                        topTube.getWidth(),
+                        topTube.getHeight() + 180);
                 batch.draw(bottomTube,
                         tubeX[i],
-                        Gdx.graphics.getHeight() / 2 - gap / 2 - bottomTube.getHeight() + tubeOffset[i]);
+                        Gdx.graphics.getHeight() / 2 - gap / 2 - bottomTube.getHeight() + tubeOffset[i],
+                        topTube.getWidth(),
+                        bottomTube.getHeight() - 180);
             }
 
             if(birdY>0 || birdVelocity <0){
@@ -141,6 +145,7 @@ public class MyGdxGame extends ApplicationAdapter {
 
             }
 
+            //bird drawn here
         batch.draw
                 (birds[flapState],
                         Gdx.graphics.getWidth() / 2 - birds[flapState].getWidth() / 2,
