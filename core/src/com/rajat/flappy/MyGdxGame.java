@@ -56,7 +56,7 @@ public class MyGdxGame extends ApplicationAdapter {
 
 
 
-        distanceBetweenTubes = Gdx.graphics.getWidth()/2;
+        distanceBetweenTubes = Gdx.graphics.getWidth() * 3/4;
 
         for (int i = 0; i < numberOfTubes; i++)
         {
@@ -89,7 +89,15 @@ public class MyGdxGame extends ApplicationAdapter {
                 //with 0.5 rand num is b/w 0.5 & -0.5
             }
             for (int i = 0; i < numberOfTubes; i++) {
-                tubeX[i] = tubeX[i] - tubeVelocity;
+
+                if(tubeX[i] < - topTube.getWidth())//can even take bottom tube
+                {
+                    tubeX[i] = numberOfTubes * distanceBetweenTubes;
+
+                }
+                else {
+                    tubeX[i] = tubeX[i] - tubeVelocity;
+                }
 
 
                 //drawing tubes
