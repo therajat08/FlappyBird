@@ -2,9 +2,12 @@ package com.rajat.flappy;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Circle;
 
 import java.util.Random;
 
@@ -13,12 +16,16 @@ import javax.xml.soap.Text;
 public class MyGdxGame extends ApplicationAdapter {
 	SpriteBatch batch;
 	Texture background;
+	ShapeRenderer shapeRenderer;
+	//like a batch shaperenderer enables us to draw shapes
+    //used for collision detection
 
 	Texture[] birds;
 	int flapState = 0;
 	float birdY = 0;
 	float birdVelocity = 0;
     float gravity = 2;
+    Circle birdCircle;
 
     Texture topTube;
     Texture bottomTube;
@@ -42,6 +49,8 @@ public class MyGdxGame extends ApplicationAdapter {
 	public void create () {
 		batch = new SpriteBatch();
         background = new Texture("bg.png");
+        shapeRenderer = new ShapeRenderer();
+        birdCircle = new Circle();
 
         birds = new Texture[2];
         birds[0] = new Texture("bird.png");
@@ -93,6 +102,8 @@ public class MyGdxGame extends ApplicationAdapter {
                 if(tubeX[i] < - topTube.getWidth())//can even take bottom tube
                 {
                     tubeX[i] = numberOfTubes * distanceBetweenTubes;
+                    tubeOffset[i] = (randomGenerator.nextFloat() - 0.5f) * (Gdx.graphics.getHeight() - gap - 200);
+                    //above line added so that the tubes dont come with same offset again
 
                 }
                 else {
@@ -147,6 +158,19 @@ public class MyGdxGame extends ApplicationAdapter {
                         Gdx.graphics.getWidth() / 2 - birds[flapState].getWidth() / 2,
                         birdY);
         batch.end();
+
+        birdCircle.set(
+                /*x coordinate*/Gdx.graphics.getWidth()/2,/*this doesn't change as we know*/
+                /*y coordinate*/birdY + birds[flapState].getHeight()/2,
+                /*radius*/      birds[flapState].getWidth()/2 );
+
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        //filled here can be others as well
+        shapeRenderer.setColor(Color.RED);
+        shapeRenderer.circle(birdCircle.x,
+                             birdCircle.y,
+                             birdCircle.radius);
+        shapeRenderer.end();
 	}
 	/*
 	@Override
