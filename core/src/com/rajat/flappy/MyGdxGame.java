@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
@@ -28,9 +29,12 @@ public class MyGdxGame extends ApplicationAdapter {
 	float birdVelocity = 0;
     float gravity = 2;
     Circle birdCircle;
-
+    int score = 0;
+    int scoringTube=0;
+    BitmapFont font;//for scoring
     Texture topTube;
     Texture bottomTube;
+
 
 	int gameState = 0;
 
@@ -56,6 +60,12 @@ public class MyGdxGame extends ApplicationAdapter {
         background = new Texture("bg.png");
         shapeRenderer = new ShapeRenderer();
         birdCircle = new Circle();
+
+
+        //setting up score font
+        font = new BitmapFont();
+        font.setColor(Color.BLUE);
+        font.getData().setScale(10);
 
         birds = new Texture[2];
         birds[0] = new Texture("bird.png");
@@ -98,6 +108,19 @@ public class MyGdxGame extends ApplicationAdapter {
 
         if(gameState != 0) {
 
+            if(tubeX[scoringTube] < Gdx.graphics.getWidth()/2)
+            {
+                score++;
+                if(scoringTube < numberOfTubes - 1)
+                {
+                    scoringTube++;
+                    Gdx.app.log("score ", String.valueOf(score));
+                }
+                else{
+                    scoringTube = 0;
+                }
+            }
+
             if(Gdx.input.justTouched()){
 
                 birdVelocity = +30;
@@ -116,6 +139,8 @@ public class MyGdxGame extends ApplicationAdapter {
                 }
                 else {
                     tubeX[i] = tubeX[i] - tubeVelocity;
+
+
                 }
 
 
@@ -177,12 +202,17 @@ public class MyGdxGame extends ApplicationAdapter {
                 (birds[flapState],
                         Gdx.graphics.getWidth() / 2 - birds[flapState].getWidth() / 2,
                         birdY);
+
+        //drawing score
+        font.draw(batch,String.valueOf(score),100,180);
+
         batch.end();
 
         birdCircle.set(
                 /*x coordinate*/Gdx.graphics.getWidth()/2,/*this doesn't change as we know*/
                 /*y coordinate*/birdY + birds[flapState].getHeight()/2,
                 /*radius*/      birds[flapState].getWidth()/2 );
+
 
        /* shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         //filled here can be others as well
