@@ -34,7 +34,7 @@ public class MyGdxGame extends ApplicationAdapter {
     BitmapFont font;//for scoring
     Texture topTube;
     Texture bottomTube;
-
+    Texture gameover;
 
 	int gameState = 0;
 
@@ -60,7 +60,7 @@ public class MyGdxGame extends ApplicationAdapter {
         background = new Texture("bg.png");
         shapeRenderer = new ShapeRenderer();
         birdCircle = new Circle();
-
+        gameover = new Texture("gameover.png");
 
         //setting up score font
         font = new BitmapFont();
@@ -104,9 +104,26 @@ public class MyGdxGame extends ApplicationAdapter {
 		/*0 , 0 means background renders from bottom left
 		  3rd and 4th parameter to stretch background as muchas the screen */
 
+        if (flapState == 0)
+        {
 
+            flapState = 1;
 
-        if(gameState != 0) {
+        }
+        else
+        {
+
+            flapState = 0;
+
+        }
+
+        //bird drawn here
+        batch.draw
+                (birds[flapState],
+                        Gdx.graphics.getWidth() / 2 - birds[flapState].getWidth() / 2,
+                        birdY);
+
+        if(gameState == 1) {
 
             if(tubeX[scoringTube] < Gdx.graphics.getWidth()/2)
             {
@@ -165,43 +182,28 @@ public class MyGdxGame extends ApplicationAdapter {
                            bottomTube.getHeight());
             }
 
-            if(birdY>0 || birdVelocity <0){
+            if(birdY>0){
 
                 birdVelocity -= gravity;
                 birdY += birdVelocity;
 
+            }else {
+                gameState = 2;
             }
 
-
-
-
-        }else
+        }else if(gameState == 0)
         {
 
             if(Gdx.input.justTouched()){
 
                 gameState = 1;
             }
+        }else if(gameState == 2)
+        {
+            batch.draw(gameover,Gdx.graphics.getWidth()/2 - gameover.getWidth()/2,Gdx.graphics.getHeight()/2 - gameover.getHeight()/2);
         }
 
-        if (flapState == 0)
-            {
-
-                flapState = 1;
-
-            }
-        else
-            {
-
-                flapState = 0;
-
-            }
-
-            //bird drawn here
-        batch.draw
-                (birds[flapState],
-                        Gdx.graphics.getWidth() / 2 - birds[flapState].getWidth() / 2,
-                        birdY);
+        //birds were here
 
         //drawing score
         font.draw(batch,String.valueOf(score),100,180);
@@ -240,7 +242,7 @@ public class MyGdxGame extends ApplicationAdapter {
             if(Intersector.overlaps(birdCircle,topTuberectangles[i])  ||
                     Intersector.overlaps(birdCircle,bottomTuberectangles[i])){
 
-                Gdx.app.log("collision", "yes");
+                gameState = 2;
             }
         }
        // shapeRenderer.end();
