@@ -57,7 +57,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-        background = new Texture("bg.png");
+        background = new Texture("back.png");
         shapeRenderer = new ShapeRenderer();
         birdCircle = new Circle();
         gameover = new Texture("gameover.png");
@@ -70,7 +70,7 @@ public class MyGdxGame extends ApplicationAdapter {
         birds = new Texture[2];
         birds[0] = new Texture("bird.png");
         birds[1] = new Texture("bird2.png");
-        birdY = Gdx.graphics.getHeight()/2-birds[0].getHeight()/2;
+
 
         topTube = new Texture("pipetop.png");
         bottomTube = new Texture("pipebottom.png");
@@ -82,6 +82,14 @@ public class MyGdxGame extends ApplicationAdapter {
         topTuberectangles = new Rectangle[numberOfTubes];
         bottomTuberectangles = new Rectangle[numberOfTubes];
 
+        startGame();
+
+	}
+
+	public  void startGame(){
+
+        birdY = Gdx.graphics.getHeight()/2-birds[0].getHeight()/2;
+
         for (int i = 0; i < numberOfTubes; i++)
         {
             tubeOffset[i] = (randomGenerator.nextFloat() - 0.5f) * (Gdx.graphics.getHeight() - gap - 200);
@@ -90,8 +98,7 @@ public class MyGdxGame extends ApplicationAdapter {
             topTuberectangles[i] = new Rectangle();
             bottomTuberectangles[i] = new Rectangle();
         }
-	}
-
+    }
 	@Override
 	public void render () {
 		//this method runs continuously
@@ -201,6 +208,15 @@ public class MyGdxGame extends ApplicationAdapter {
         }else if(gameState == 2)
         {
             batch.draw(gameover,Gdx.graphics.getWidth()/2 - gameover.getWidth()/2,Gdx.graphics.getHeight()/2 - gameover.getHeight()/2);
+
+            if(Gdx.input.justTouched()){
+
+                gameState = 1;
+                startGame();
+                score = 0;
+                scoringTube = 0;
+                birdVelocity = 0;
+            }
         }
 
         //birds were here
